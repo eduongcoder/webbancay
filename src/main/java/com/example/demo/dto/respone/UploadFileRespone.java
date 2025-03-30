@@ -14,5 +14,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class UploadFileRespone {
 	String public_id;
-	String url; 
+	String url ;
 }
