@@ -15,6 +15,7 @@ import com.example.demo.dto.respone.UploadFileRespone;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.mapper.ProductMapper;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
 
 import lombok.AccessLevel;
@@ -31,15 +32,21 @@ public class ProductService {
 	ProductRepository productRepository;
 	ProductMapper productMapper;
 	UploadFileService uploadFileService;
+	CategoryRepository categoryRepository;
 	
 	public List<ProductRespone> getAll(){
 		return  productRepository.findAll().stream().map(t -> productMapper.toProductRespone(t)).toList();
 	}
 	
 	public ProductRespone createProduct(MultipartFile image,ProductCreationRequest request) throws IOException {
+		
+		Category category=categoryRepository.findById(request.getIdCategory()).orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getIdCategory()));
+		
 		Product product=productMapper.toProduct(request);
 		UploadFileRespone url=uploadFileService.uploadFile(image);
 
+		product.setCategory(category);
+		
 		product.setUrl(url.getUrl());
 		product= productRepository.save(product);
 		
@@ -47,13 +54,16 @@ public class ProductService {
 	}
 	
 	public ProductRespone UpdateProduct(MultipartFile image,ProductUpdateRequest request) throws IOException {
-		Product category=productMapper.toProductUpdate(request);
+		Category category=categoryRepository.findById(request.getIdCategory()).orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getIdCategory()));
+
+		Product product=productMapper.toProductUpdate(request);
 		UploadFileRespone url=uploadFileService.uploadFile(image);
 
-		category.setUrl(url.getUrl());
-		category= productRepository.save(category);
+		product.setCategory(category);
+		product.setUrl(url.getUrl());
+		product= productRepository.save(product);
 		
-		return productMapper.toProductRespone(category);
+		return productMapper.toProductRespone(product);
 	}
 
 

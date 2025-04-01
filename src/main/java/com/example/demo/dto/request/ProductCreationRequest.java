@@ -17,6 +17,6 @@ import lombok.experimental.FieldDefaults;
 public class ProductCreationRequest {
 	String productName;
 	String price;
-	String url;
+	String idCategory;
 
 }

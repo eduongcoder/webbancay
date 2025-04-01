@@ -19,5 +19,6 @@ public class ProductUpdateRequest {
 	String productName;
 	String price;
 	String url;
+	String idCategory;
 
 }

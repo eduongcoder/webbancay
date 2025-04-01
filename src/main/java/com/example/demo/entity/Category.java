@@ -5,6 +5,8 @@ package com.example.demo.entity;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
@@ -23,6 +25,7 @@ import lombok.experimental.FieldDefaults;
 public class Category {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
 	String idCategory;
 	String categoryName;
 	

@@ -49,7 +49,7 @@ public class UploadFileService {
 		String url=cloudinary.url().generate(StringUtils.join(publicValue,".",extension));
 		
 		
-        cleanDisk(fileUpload); 
+        cleanDisk(fileUpload);
 
 		return  UploadFileRespone.builder().public_id(public_ID).url(url).build();
 	}

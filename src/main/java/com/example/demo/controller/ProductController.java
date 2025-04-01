@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,9 +41,10 @@ public class ProductController {
 	}
 	
 	@PostMapping(value = "/create",consumes =  { "multipart/form-data" })
-	public ApiRespone<ProductRespone> createProduct(@RequestParam MultipartFile image,@RequestBody ProductCreationRequest request) throws IOException{
-		return ApiRespone.<ProductRespone>builder().result(productService.createProduct(image,request)).build();
-	}
+	public ApiRespone<ProductRespone> createProduct(@RequestParam MultipartFile image,@RequestPart(required = false) ProductCreationRequest request) throws IOException{
+		ProductRespone productRespone=productService.createProduct(image,request);
+		return ApiRespone.<ProductRespone>builder().result(productRespone).build();
+	} 
 	
 	@PutMapping(value ="/update",consumes =  { "multipart/form-data" })
 	public ApiRespone<ProductRespone> updateProduct(@RequestParam MultipartFile image,@RequestBody ProductUpdateRequest request) throws IOException{
@@ -51,7 +53,7 @@ public class ProductController {
 	
 	@DeleteMapping("/delete/{id}")
 	public ApiRespone<Boolean> deleteProduct(@PathVariable(value = "id") String id){
-		return ApiRespone.<Boolean>builder().result(productService.deleteProduct(id)).build();
+		return ApiRespone.<Boolean>builder().result(productService.deleteProduct(id)).build(); 
 	}
 
 }

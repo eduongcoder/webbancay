@@ -12,11 +12,11 @@ public class CrosConfig implements WebMvcConfigurer{
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 				.allowedOrigins("http://localhost:3000", "http://localhost:5174", "http://localhost:8082",
-						"http://localhost:5173","http://localhost:8082")
+						"http://localhost:5173","http://localhost:8082","https://gleeful-moonbeam-d487c8.netlify.app/")
 				.allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
 				.allowedHeaders("*")
 				.allowCredentials(true);
-
+			
 	}
 
 } 
