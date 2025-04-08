@@ -20,7 +20,7 @@ public class Config_VNPay {
     // Format thời gian thành chuỗi
     public static String vnp_CreateDate = formatter.format(calendar.getTime());
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/zalo_pay/payment_infor";
+    public static String vnp_ReturnUrl = "https://nhom11t4sangca1.onrender.com/zalo_pay/payment_infor";
     public static String vnp_TmnCode = "3TKV8SHO";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
@@ -108,17 +108,19 @@ public class Config_VNPay {
     }
 
     public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
-        try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
-            }
-        } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("Proxy-Client-IP");
         }
-        return ipAdress;
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+        }
+        return ipAddress;
     }
+
 
     public static String getRandomNumber(int len) {
         Random rnd = new Random();

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,12 @@ public class UserService {
 	}
 	
 	public UserReponse createUser(UserCreationRequest request) {
+		Optional<User> exsisUser=userRepository.findByEmail(request.getEmail());
+		
+		if(exsisUser.isPresent()) {
+			return userMapper.toUserRespone(exsisUser.get());
+		}
+		
 		User user=userMapper.toUser(request);
 		
 		user= userRepository.save(user);

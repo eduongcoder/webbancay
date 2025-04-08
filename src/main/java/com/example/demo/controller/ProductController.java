@@ -47,7 +47,7 @@ public class ProductController {
 	} 
 	
 	@PutMapping(value ="/update",consumes =  { "multipart/form-data" })
-	public ApiRespone<ProductRespone> updateProduct(@RequestParam MultipartFile image,@RequestBody ProductUpdateRequest request) throws IOException{
+	public ApiRespone<ProductRespone> updateProduct(@RequestParam MultipartFile image,@RequestPart(required = false) ProductUpdateRequest request) throws IOException{
 		return ApiRespone.<ProductRespone>builder().result(productService.UpdateProduct(image,request)).build();
 	}
 	
