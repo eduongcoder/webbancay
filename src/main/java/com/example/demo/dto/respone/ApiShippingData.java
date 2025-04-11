@@ -1,7 +1,5 @@
 package com.example.demo.dto.respone;
 
-import java.math.BigDecimal;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +15,7 @@ import lombok.experimental.FieldDefaults;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDataRespone {
-	private String id;
-
-
-	private String orderCode;
-
-	private BigDecimal totalFee;
+public class ApiShippingData<T> {
+	String message;
+	T data;	
 }

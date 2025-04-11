@@ -1,22 +1,21 @@
 package com.example.demo.dto.respone;
 
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-@Getter
-@Setter
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
+import java.util.List;
+ 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRespone {
-	String idProduct;
-	String productName;
-	String price;
-	String url;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
+public class ApiShippingData2<T> {
+	int code;
+	String message;
+	List<T> data;
 }
