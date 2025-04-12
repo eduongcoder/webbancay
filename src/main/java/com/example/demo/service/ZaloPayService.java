@@ -4,8 +4,12 @@ import com.example.demo.Client.ZaloPayClient;
 import com.example.demo.Util.ZaloPayUtil;
 import com.example.demo.dto.request.EmbedData;
 import com.example.demo.dto.request.PaymentRequest;
+import com.example.demo.dto.request.ZaloPayCallback;
 import com.example.demo.dto.request.ZaloPayRequest;
+import com.example.demo.dto.respone.ZaloPayResponseData;
+import com.example.demo.mapper.ZaloMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -14,6 +18,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +35,9 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ZaloPayService {
+	ZaloMapper zaloMapper;
+    ObjectMapper objectMapper;
+
     String ZALO_PAY_API_URL = "https://zlpdev-mi-zlpdemo.zalopay.vn/zlp-demo/v2/api/gateway";
     String APP_ID = "2553";
     String APP_KEY = "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL";
@@ -46,7 +54,7 @@ public class ZaloPayService {
         return fmt.format(cal.getTimeInMillis());
     }
 
-    public String createPaymentOrderupdate(ZaloPayRequest user){
+    public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
@@ -75,14 +83,32 @@ public class ZaloPayService {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<?> response = restTemplate.exchange(
                 "https://zlpdev-mi-zlpdemo.zalopay.vn/zlp-demo/v2/api/gateway",
                 HttpMethod.POST,
                 entity,
                 String.class
         );
-        return response.toString();
+        
+
+        
+        return response;
     }
 
+    public String createPaymentOrder(@RequestBody ZaloPayRequest request) throws JsonProcessingException {
+    	ResponseEntity<?> responseEntity =createPaymentOrderupdate(request);
+
+        JsonNode rootNode = objectMapper.readTree(responseEntity.getBody().toString());
+
+        String responseDataString = rootNode.get("response_data").asText();
+
+        ZaloPayResponseData responseData = objectMapper.readValue(responseDataString, ZaloPayResponseData.class);
+
+        System.out.println("Mã giao dịch: " + responseData.getZp_trans_token());
+        System.out.println("Link thanh toán: " + responseData.getOrder_url());
+
+
+        return responseData.getOrder_url();
+    }
 
 }
