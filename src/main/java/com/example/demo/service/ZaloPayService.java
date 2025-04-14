@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.cloudinary.json.JSONArray;
 import org.cloudinary.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -53,18 +54,28 @@ public class ZaloPayService {
         fmt.setCalendar(cal);
         return fmt.format(cal.getTimeInMillis());
     }
+    public void checkCallback(){
+        log.info("hhfhfhf");
+    }
+    public void checkCallbackGet(){
+        log.info("hhfhfhf");
+    }
 
     public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
+        JSONObject embedData = new JSONObject();
+        embedData.put("redirecturl", "http://localhost:8080/api/payment/callback");
+        embedData.put("promotioninfo", "");
+        embedData.put("merchantinfo", "embeddata123");
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("app_id", "2553");
         map.add("key1", key1);
         map.add("key2", key2);
         map.add("amount", user.getAmount());
         map.add("app_user", "demo");
-        map.add("embed_data", "{\"promotioninfo\":\"\",\"merchantinfo\":\"embeddata123\"}");
+        map.add("embed_data", embedData.toString());
         map.add("item", "[{\"itemid\":\"knb\",\"itemname\":\"kim nguyen bao\",\"itemprice\":198400,\"itemquantity\":1}]");
         map.add("description", "Demo - Thanh toan don hang #ORDERID");
         map.add("more_param", "currency=VND&phone=0925226173");

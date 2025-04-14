@@ -43,5 +43,13 @@ public class ZaloPayController {
 
         return responseData.getOrder_url();
     }
+    @PostMapping("/callback")
+    public void callbackZaloPay(){
+        zaloPayService.checkCallback();
+    }
+    @GetMapping("/callback")
+    public void callbackZaloPayGet(){
+        zaloPayService.checkCallbackGet();
+    }
 
 }
