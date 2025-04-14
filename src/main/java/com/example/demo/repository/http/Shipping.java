@@ -5,8 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.demo.dto.respone.ApiRespone;
+import com.example.demo.dto.request.ShippingRequest;
 import com.example.demo.dto.respone.ApiShippingData;
 import com.example.demo.dto.respone.ApiShippingData2;
 import com.example.demo.dto.respone.DistrictsRespone;
@@ -23,4 +25,10 @@ public interface Shipping {
 	
 	@GetMapping(value = "/api/GHN/wards/{districtId}",produces= MediaType.APPLICATION_JSON_VALUE)
 	ApiShippingData<ApiShippingData2<WardRespone>> getWard(@PathVariable(name = "districtId") int districtId);
+	
+//	@PostMapping(value = "/api/GHN/calculate-fee",produces = MediaType.APPLICATION_JSON_VALUE)
+//	ApiShippingData3<ShippingFeeResponse> calculatefee(@RequestBody ShippingRequest request);
+	
+	@PostMapping(value = "/api/GHN/calculate-fee",produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<?> calculatefee(@RequestBody ShippingRequest request);
 }

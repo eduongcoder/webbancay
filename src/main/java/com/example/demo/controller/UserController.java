@@ -44,8 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	UserService userService;
-	Shipping shipping;
-	ShippingService shippingService;
 	
 	@GetMapping("/getAll")
 	public ApiRespone<List<UserReponse>> getAllUser(){
@@ -67,24 +65,6 @@ public class UserController {
 		return ApiRespone.<Boolean>builder().result(userService.deleteUser(id)).build();
 	}
 	
-	@GetMapping("/getProvice")
-	public ApiShippingData<ApiShippingData2<ProvinceRespone>> getProvice(){
-		return shipping.getProvinces();
-	}
-	
-	@GetMapping(value = "/getDistrict/{provinceId}")
-	public ApiShippingData<ApiShippingData2<DistrictsRespone>> getDistrict(@PathVariable(name = "provinceId") int provinceId){
-		return shipping.getDistrict(provinceId);
-	}
-	
-	@GetMapping(value = "/getWard/{districtId}")
-	public ApiShippingData<ApiShippingData2<WardRespone>> getWard(@PathVariable(name = "districtId") int districtId){
-		return shipping.getWard(districtId);
-	}
-	
-	@GetMapping("/getDistrictWard")
-	public ApiRespone<DistrictWardRespone> getDistrictWard(@RequestParam String province,@RequestParam String district,@RequestParam String ward){
-		return ApiRespone.<DistrictWardRespone>builder().result(shippingService.getDistrictWard(province, district, ward)).build() ;
-	}
+
 
 }

@@ -26,11 +26,7 @@ public class ZaloPayController {
     ZaloPayService zaloPayService;
     ObjectMapper objectMapper;
     
-//    public ZaloPayResponseData handleZaloResponse(ZaloPayCallback callback) throws JsonProcessingException {
-//        // Parse chuỗi JSON bên trong response_data thành object
-//
-//        return response;
-//    }
+
     @PostMapping("/create")
     public String createPaymentOrder(@RequestBody ZaloPayRequest request) throws JsonProcessingException {
     	ResponseEntity<?> responseEntity = zaloPayService.createPaymentOrderupdate(request);
