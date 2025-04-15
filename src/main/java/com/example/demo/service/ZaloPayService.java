@@ -55,10 +55,10 @@ public class ZaloPayService {
         return fmt.format(cal.getTimeInMillis());
     }
     public void checkCallback(){
-        log.info("hhfhfhf");
+        log.info("heheheheh");
     }
     public void checkCallbackGet(){
-        log.info("hhfhfhf");
+        log.info("hihihihi");
     }
 
     public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user){
