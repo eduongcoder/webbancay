@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,25 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.request.ProductCreationRequest;
-import com.example.demo.dto.request.ProductUpdateRequest;
 import com.example.demo.dto.request.UserCreationRequest;
 import com.example.demo.dto.request.UserUpdateRequest;
 import com.example.demo.dto.respone.ApiRespone;
-import com.example.demo.dto.respone.ApiShippingData;
-import com.example.demo.dto.respone.ApiShippingData2;
-import com.example.demo.dto.respone.DistrictWardRespone;
-import com.example.demo.dto.respone.DistrictsRespone;
-import com.example.demo.dto.respone.ProductRespone;
-import com.example.demo.dto.respone.ProvinceRespone;
 import com.example.demo.dto.respone.UserReponse;
-import com.example.demo.dto.respone.WardRespone;
-import com.example.demo.repository.http.Shipping;
-import com.example.demo.service.ProductService;
-import com.example.demo.service.ShippingService;
 import com.example.demo.service.UserService;
 
 import lombok.AccessLevel;

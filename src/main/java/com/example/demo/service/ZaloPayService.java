@@ -4,6 +4,7 @@ import com.example.demo.Client.ZaloPayClient;
 import com.example.demo.Util.ZaloPayUtil;
 import com.example.demo.dto.request.EmbedData;
 import com.example.demo.dto.request.PaymentRequest;
+import com.example.demo.dto.request.ShippingOrderRequest;
 import com.example.demo.dto.request.ZaloPayCallback;
 import com.example.demo.dto.request.ZaloPayRequest;
 import com.example.demo.dto.respone.ZaloPayResponseData;
@@ -61,21 +62,33 @@ public class ZaloPayService {
         log.info("hihihihi");
     }
 
-    public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user){
+    public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user,ShippingOrderRequest request) throws JsonProcessingException{
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
+        // Convert ShippingOrderRequest -> JSON string
+        ObjectMapper objectMapper = new ObjectMapper(); // Bạn có thể autowire nếu cần
+        String shippingOrderJson = objectMapper.writeValueAsString(request);
+
+        
+        // Tạo embed_data JSON
         JSONObject embedData = new JSONObject();
-        embedData.put("redirecturl", "http://localhost:8080/api/payment/callback");
+        embedData.put("redirecturl", "http://localhost:8080/api/payment/callback"); // User redirect sau khi thanh toán
+        embedData.put("callbackurl", "http://localhost:8080/api/payment/call"); // ZaloPay gửi POST xác nhận đơn hàng
         embedData.put("promotioninfo", "");
         embedData.put("merchantinfo", "embeddata123");
+        embedData.put("shipping_order", new JSONObject(shippingOrderJson));
+      
+        String embedDataStr = embedData.toString();
+
+        
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("app_id", "2553");
         map.add("key1", key1);
         map.add("key2", key2);
         map.add("amount", user.getAmount());
         map.add("app_user", "demo");
-        map.add("embed_data", embedData.toString());
+        map.add("embed_data", embedDataStr);
         map.add("item", "[{\"itemid\":\"knb\",\"itemname\":\"kim nguyen bao\",\"itemprice\":198400,\"itemquantity\":1}]");
         map.add("description", "Demo - Thanh toan don hang #ORDERID");
         map.add("more_param", "currency=VND&phone=0925226173");
@@ -93,6 +106,7 @@ public class ZaloPayService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 
+        
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<?> response = restTemplate.exchange(
                 "https://zlpdev-mi-zlpdemo.zalopay.vn/zlp-demo/v2/api/gateway",
@@ -106,20 +120,20 @@ public class ZaloPayService {
         return response;
     }
 
-    public String createPaymentOrder(@RequestBody ZaloPayRequest request) throws JsonProcessingException {
-    	ResponseEntity<?> responseEntity =createPaymentOrderupdate(request);
-
-        JsonNode rootNode = objectMapper.readTree(responseEntity.getBody().toString());
-
-        String responseDataString = rootNode.get("response_data").asText();
-
-        ZaloPayResponseData responseData = objectMapper.readValue(responseDataString, ZaloPayResponseData.class);
-
-        System.out.println("Mã giao dịch: " + responseData.getZp_trans_token());
-        System.out.println("Link thanh toán: " + responseData.getOrder_url());
-
-
-        return responseData.getOrder_url();
-    }
+//    public String createPaymentOrder(@RequestBody ZaloPayRequest request) throws JsonProcessingException {
+//    	ResponseEntity<?> responseEntity =createPaymentOrderupdate(request);
+//
+//        JsonNode rootNode = objectMapper.readTree(responseEntity.getBody().toString());
+//
+//        String responseDataString = rootNode.get("response_data").asText();
+//
+//        ZaloPayResponseData responseData = objectMapper.readValue(responseDataString, ZaloPayResponseData.class);
+//
+//        System.out.println("Mã giao dịch: " + responseData.getZp_trans_token());
+//        System.out.println("Link thanh toán: " + responseData.getOrder_url());
+//
+//
+//        return responseData.getOrder_url();
+//    }
 
 }

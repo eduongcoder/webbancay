@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.example.demo.dto.request.ShippingOrderRequest;
 import com.example.demo.dto.request.ShippingRequest;
 import com.example.demo.dto.respone.ApiShippingData;
 import com.example.demo.dto.respone.ApiShippingData2;
@@ -31,4 +32,8 @@ public interface Shipping {
 	
 	@PostMapping(value = "/api/GHN/calculate-fee",produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<?> calculatefee(@RequestBody ShippingRequest request);
+	
+	@PostMapping(value = "/api/GHN/create-order",produces = MediaType.APPLICATION_JSON_VALUE) 
+	ResponseEntity<?> createOrder(@RequestBody ShippingOrderRequest request);
+
 }
