@@ -41,7 +41,7 @@ public class ShippingService {
 		
 		List<ProvinceRespone> provinceRespones=shipping.getProvinces().getData().getData();
 		
-		ProvinceRespone matchedProvince= provinceRespones.stream().filter(t -> t.getProvinceName().equalsIgnoreCase(province)).findFirst().orElse(null);
+		ProvinceRespone matchedProvince= provinceRespones.stream().filter(t -> t.getProvinceName().equals(province)).findFirst().orElse(null);
 		
 		if(matchedProvince==null) {
 	        throw new RuntimeException("Province not found: " + province);

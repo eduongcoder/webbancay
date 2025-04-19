@@ -28,6 +28,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -66,18 +68,25 @@ public class ZaloPayService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        // Convert ShippingOrderRequest -> JSON string
-        ObjectMapper objectMapper = new ObjectMapper(); // Bạn có thể autowire nếu cần
-        String shippingOrderJson = objectMapper.writeValueAsString(request);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        
+        // Convert ShippingOrderRequest -> JSON string & encode
+        String shippingOrderJson = objectMapper.writeValueAsString(request);
+        String encodedShippingOrder = URLEncoder.encode(shippingOrderJson, StandardCharsets.UTF_8);
+
+        // Gắn vào redirecturl dưới dạng query string
+        String redirectUrl = "https://nhom11t4sangca1.onrender.com/api/payment/callback?shipping_order=" + encodedShippingOrder;
+//        String redirectUrl = "http://localhost:8080/api/payment/callback?shipping_order=" + encodedShippingOrder;
+
         // Tạo embed_data JSON
         JSONObject embedData = new JSONObject();
-        embedData.put("redirecturl", "http://localhost:8080/api/payment/callback"); // User redirect sau khi thanh toán
-        embedData.put("callbackurl", "http://localhost:8080/api/payment/call"); // ZaloPay gửi POST xác nhận đơn hàng
+//        embedData.put("redirecturl", redirectUrl); // User redirect sau khi thanh toán
+//        embedData.put("callbackurl", "http://localhost:8080/api/payment/call"); // ZaloPay gửi POST xác nhận đơn hàng
+        embedData.put("redirecturl", redirectUrl); // User redirect sau khi thanh toán
+        embedData.put("callbackurl", "https://nhom11t4sangca1.onrender.com/api/payment/call"); // ZaloPay gửi POST xác nhận đơn hàng
         embedData.put("promotioninfo", "");
         embedData.put("merchantinfo", "embeddata123");
-        embedData.put("shipping_order", new JSONObject(shippingOrderJson));
+//        embedData.put("shipping_order", new JSONObject(shippingOrderJson));
       
         String embedDataStr = embedData.toString();
 
