@@ -37,12 +37,22 @@ public class ZaloPayController {
 	Shipping shipping;
 
 	@PostMapping("/create")
-	public String createPaymentOrder(@RequestBody ZaloPayWrapperRequest request) throws JsonProcessingException, UnsupportedEncodingException {
+	public String createPaymentOrder(@RequestBody ZaloPayWrapperRequest request)
+			throws JsonProcessingException, UnsupportedEncodingException {
+		
+		ResponseEntity<?> order=shipping.createOrder(request.getShippingOrderRequest());
+		
+		Map<String, Object> body=(Map<String, Object>) order.getBody();
+		
+		String orderId=body.get("orderCode").toString();
+		
 		ResponseEntity<?> responseEntity = zaloPayService.createPaymentOrderupdate(request.getZaloPayRequest(),
-				request.getShippingOrderRequest());
+				orderId);
+	
+		
 
 		JsonNode rootNode = objectMapper.readTree(responseEntity.getBody().toString());
-
+		
 		String responseDataString = rootNode.get("response_data").asText();
 
 		ZaloPayResponseData responseData = objectMapper.readValue(responseDataString, ZaloPayResponseData.class);
@@ -53,43 +63,54 @@ public class ZaloPayController {
 		return responseData.getOrder_url();
 	}
 
-//	@RequestBody String body
-	@PostMapping("/call")
-	public void call() {
-//        try {
-//            JsonNode callbackJson = objectMapper.readTree(body);
-//            String embedDataStr = callbackJson.get("embed_data").asText();
-//
-//            JsonNode embedData = objectMapper.readTree(embedDataStr);
-//            JsonNode shippingOrderNode = embedData.get("shipping_order");
-//
-//            // Deserialize thành ShippingOrderRequest
-//            ShippingOrderRequest request = objectMapper.treeToValue(shippingOrderNode, ShippingOrderRequest.class);
-//
-//            // Gửi request sang GHN
-//            ResponseEntity<?> ghnResponse = shipping.createOrder(request);
-//            log.info("tao roi ne hehe");
-//            return ResponseEntity.ok("Đã tạo đơn GHN thành công: " + ghnResponse.getBody());
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi callback: " + e.getMessage());
-//        }
-		zaloPayService.checkCallback();
-	}
-//	@RequestParam("embed_data") String embedDataStr
+	// @RequestBody String body
+//	@PostMapping("/call")
+//	public void call() {
+		// try {
+		// JsonNode callbackJson = objectMapper.readTree(body);
+		// String embedDataStr = callbackJson.get("embed_data").asText();
+		//
+		// JsonNode embedData = objectMapper.readTree(embedDataStr);
+		// JsonNode shippingOrderNode = embedData.get("shipping_order");
+		//
+		// // Deserialize thành ShippingOrderRequest
+		// ShippingOrderRequest request = objectMapper.treeToValue(shippingOrderNode,
+		// ShippingOrderRequest.class);
+		//
+		// // Gửi request sang GHN
+		// ResponseEntity<?> ghnResponse = shipping.createOrder(request);
+		// log.info("tao roi ne hehe");
+		// return ResponseEntity.ok("Đã tạo đơn GHN thành công: " +
+		// ghnResponse.getBody());
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi
+		// callback: " + e.getMessage());
+		// }
+//		zaloPayService.checkCallback();
+//	}
+	// @RequestParam("embed_data") String embedDataStr
+	// @GetMapping("/callback")
+	// public ResponseEntity<?> handleCallback(@RequestParam("shipping_order")
+	// String shippingOrderStr) {
+	// try {
+	// String decoded = URLDecoder.decode(shippingOrderStr, StandardCharsets.UTF_8);
+	// ShippingOrderRequest request = objectMapper.readValue(decoded,
+	// ShippingOrderRequest.class);
+	// log.info(request.toString());
+	// // Gửi sang GHN
+	// ResponseEntity<?> ghnRes = shipping.createOrder(request);
+	// return ResponseEntity.ok("Tạo đơn GHN thành công: " + ghnRes.getBody());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi: " +
+	// e.getMessage());
+	// }
+	// }
+
 	@GetMapping("/callback")
-	public ResponseEntity<?> handleCallback(@RequestParam("shipping_order") String shippingOrderStr) {
-	    try {
-	        String decoded = URLDecoder.decode(shippingOrderStr, StandardCharsets.UTF_8);
-	        ShippingOrderRequest request = objectMapper.readValue(decoded, ShippingOrderRequest.class);
-	        log.info(request.toString());
-	        // Gửi sang GHN
-	        ResponseEntity<?> ghnRes = shipping.createOrder(request);
-	        return ResponseEntity.ok("Tạo đơn GHN thành công: " + ghnRes.getBody());
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi: " + e.getMessage());
-	    }
+	public void handleCallback() {
+
 	}
 }

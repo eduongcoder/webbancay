@@ -64,20 +64,12 @@ public class ZaloPayService {
         log.info("hihihihi");
     }
 
-    public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user,ShippingOrderRequest request) throws JsonProcessingException{
+    public ResponseEntity<?> createPaymentOrderupdate(ZaloPayRequest user,String orderId) throws JsonProcessingException{
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        // Convert ShippingOrderRequest -> JSON string & encode
-        String shippingOrderJson = objectMapper.writeValueAsString(request);
-        String encodedShippingOrder = URLEncoder.encode(shippingOrderJson, StandardCharsets.UTF_8);
-
-        // Gắn vào redirecturl dưới dạng query string
-        String redirectUrl = "https://nhom11t4sangca1.onrender.com/api/payment/callback?shipping_order=" + encodedShippingOrder;
-//        String redirectUrl = "http://localhost:8080/api/payment/callback?shipping_order=" + encodedShippingOrder;
-
+         String redirectUrl = "https://nhom11sangt4ca1user.netlify.app/?order_id="+orderId;
         // Tạo embed_data JSON
         JSONObject embedData = new JSONObject();
 //        embedData.put("redirecturl", redirectUrl); // User redirect sau khi thanh toán
